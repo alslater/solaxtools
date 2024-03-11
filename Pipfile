@@ -9,6 +9,7 @@ millify = "*"
 tableprint = "*"
 setuptools = "*"
 ecl-dev-tools = {file = ".", editable = true}
+solaxtools = {file = ".", editable = true}
 
 [dev-packages]
 

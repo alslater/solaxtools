@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1019dd3d36c1ea826b4ebb6dce87ca2af50706450e652aa9319317f9167e1ee6"
+            "sha256": "9471b05ed75cad1b2aba90495c5c80262aed4b46ceea8d067f87952b16f0ae75"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -16,10 +16,6 @@
         ]
     },
     "default": {
-        "ecl-dev-tools": {
-            "editable": true,
-            "file": "."
-        },
         "future": {
             "hashes": [
                 "sha256:929292d34f5872e70396626ef385ec22355a1fae8ad29e1a734c3e43f9fbc216",
@@ -50,6 +46,10 @@
             "index": "pypi",
             "markers": "python_version >= '3.8'",
             "version": "==69.1.1"
+        },
+        "solaxtools": {
+            "editable": true,
+            "file": "."
         },
         "tableprint": {
             "hashes": [
