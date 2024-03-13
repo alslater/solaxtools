@@ -26,6 +26,14 @@ def restore_input_blocking(old_settings):
 
 
 def wait(timeout = 10):
+    """wait for maximum of timeout seconds, if 'q' is pressed then return True, else False.
+
+    Args:
+        timeout (int, optional): wait timeout. Defaults to 10.
+
+    Returns:
+        boolean: 'q' pressed
+    """
     start_time = time()
     while True:
         remaining_time = timeout - (time() - start_time)
@@ -38,6 +46,7 @@ def wait(timeout = 10):
                 return True
         else:
             sleep(0.1)
+
 
 def solaxtop():
     tty_settings = set_input_nonblocking()
@@ -55,28 +64,42 @@ def solaxtop():
 
                 sv = get_values()
 
-                pvpower = sv['pvpower']
-                feedin = sv['feedin']
-                battery_power = sv['battery_power']
+                if sv is None:
+                    table(
+                        [
+                            f'{datetime.now().strftime("%H:%M:%S")}',
+                            '*',
+                            '*',
+                            '*',
+                            '*',
+                            '*',
+                            '*',
+                            '*',
+                        ]
+                    )
+                else:
+                    pvpower = sv['pvpower']
+                    feedin = sv['feedin']
+                    battery_power = sv['battery_power']
 
-                usage = millify(pvpower + (abs(feedin) if feedin < 0 else 0) + (abs(battery_power) if battery_power < 0 else 0), precision=2)
+                    usage = millify(pvpower + (abs(feedin) if feedin < 0 else 0) - battery_power, precision=2)
 
-                pvpower = millify(pvpower, precision=2)
-                feedin = millify(feedin, precision=2)
-                battery_power = millify(battery_power, precision=2)
+                    pvpower = millify(pvpower, precision=2)
+                    feedin = millify(feedin, precision=2)
+                    battery_power = millify(battery_power, precision=2)
 
-                table(
-                    [
-                        f'{datetime.now().strftime("%H:%M:%S")}',
-                        f'{pvpower}W',
-                        f'{feedin}W',
-                        f'{battery_power}W',
-                        f'{usage}W',
-                        f'{sv["soc"]}%',
-                        f'{sv["battery_temp"]}°C',
-                        f'{sv["inverter_temp"]}°C'
-                    ]
-                )
+                    table(
+                        [
+                            f'{datetime.now().strftime("%H:%M:%S")}',
+                            f'{pvpower}W',
+                            f'{feedin}W',
+                            f'{battery_power}W',
+                            f'{usage}W',
+                            f'{sv["soc"]}%',
+                            f'{sv["battery_temp"]}°C',
+                            f'{sv["inverter_temp"]}°C'
+                        ]
+                    )
 
                 if wait(10):
                     break

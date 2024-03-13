@@ -8,8 +8,10 @@ pyModbusTCP = "*"
 millify = "*"
 tableprint = "*"
 setuptools = "*"
-ecl-dev-tools = {file = ".", editable = true}
 solaxtools = {file = ".", editable = true}
+python-daemon = "*"
+pid = "*"
+influxdb = "*"
 
 [dev-packages]
 

@@ -1,8 +1,17 @@
-
 from pyModbusTCP.client import ModbusClient
 from pyModbusTCP import utils
 import signal
-mb_client = ModbusClient(host="192.168.86.61", port=502, unit_id=1, auto_open=True, timeout=30)
+from configparser import ConfigParser
+from os import path, getenv
+
+config_file = path.join(getenv('HOME'), '.config/solaxtools.conf')
+
+config = ConfigParser()
+config.read(config_file)
+
+_mb_host=config.get('modbus', 'host', fallback="localhost"),
+
+mb_client = ModbusClient(host=_mb_host, port=502, unit_id=1, auto_open=True, timeout=30)
 
 _solax_registers = {
     "inverter_temp": 0x08,
@@ -14,6 +23,9 @@ _solax_registers = {
 }
 
 
+# Something seems to put the solax wifi dongle into a bad mood and it stops replying
+# causing receive errors.  I am just wondering if interrupting a call does that.
+# hence the disable_sigint decorator to stop me doing that
 def disable_sigint(func):
     def wrapper(*args, **kwargs):
         # Ignore SIGINT signal
@@ -61,12 +73,16 @@ def get_values():
     else:
         battery_power = 0
 
+    if pvpower == 0 and feedin == 0 and soc == 0 and battery_temp == 0 and inverter_temp == 0 and battery_power == 0:
+        return None
 
-    return {
-        'pvpower':pvpower,
+    result = {
+        'pvpower': pvpower,
         'feedin': feedin,
         'soc': soc,
         'battery_temp': battery_temp,
-        'inverter_temp':inverter_temp,
+        'inverter_temp': inverter_temp,
         'battery_power': battery_power,
     }
+
+    return result
