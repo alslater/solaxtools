@@ -60,7 +60,7 @@ def solax_to_influxdb():
             sv['pvpower'] = sv['pvpower'] / 1000
             sv['feedin'] = sv['feedin'] / 1000
             sv['battery_power'] = sv['battery_power'] / 1000
-            usage = (pvpower + (abs(feedin) if feedin < 0 else 0) - battery_power) / 1000
+            usage = (pvpower + -feedin - battery_power) / 1000
             sv['usage'] = usage
 
             write_series(sv)

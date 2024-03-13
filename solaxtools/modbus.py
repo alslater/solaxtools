@@ -9,7 +9,7 @@ config_file = path.join(getenv('HOME'), '.config/solaxtools.conf')
 config = ConfigParser()
 config.read(config_file)
 
-_mb_host=config.get('modbus', 'host', fallback="localhost"),
+_mb_host=config.get('modbus', 'host', fallback="localhost")
 
 mb_client = ModbusClient(host=_mb_host, port=502, unit_id=1, auto_open=True, timeout=30)
 

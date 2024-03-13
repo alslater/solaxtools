@@ -82,7 +82,7 @@ def solaxtop():
                     feedin = sv['feedin']
                     battery_power = sv['battery_power']
 
-                    usage = millify(pvpower + (abs(feedin) if feedin < 0 else 0) - battery_power, precision=2)
+                    usage = millify(pvpower + -feedin - battery_power, precision=2)
 
                     pvpower = millify(pvpower, precision=2)
                     feedin = millify(feedin, precision=2)
