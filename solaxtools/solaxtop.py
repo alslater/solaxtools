@@ -1,21 +1,30 @@
+import contextlib
 from time import sleep, time
 from millify import millify
 import tableprint as tp
 from datetime import datetime
-from .modbus import get_values
+from .modbus import get_values as get_modbus_values
+from .local_api import get_values as get_local_values
 import termios
 import sys
 import tty
 import select
+from configparser import ConfigParser
+from os import getenv, path
+
+config_file = path.join(getenv('HOME'), '.config/solaxtools.conf')
+
+config = ConfigParser()
+config.read(config_file)
+
+_mode = config.get('solaxtop', 'mode', fallback="api")
 
 def set_input_nonblocking():
     # Set stdin to non-blocking mode
     fd = sys.stdin.fileno()
     old_settings = termios.tcgetattr(fd)
-    try:
+    with contextlib.suppress(termios.error):
         tty.setcbreak(fd)
-    except termios.error:  # Ignore if already in non-blocking mode
-        pass
     return old_settings
 
 
@@ -51,7 +60,7 @@ def wait(timeout = 10):
 def solaxtop():
     tty_settings = set_input_nonblocking()
 
-    header = ['', 'PV', 'Grid', 'Battery', 'Usage', 'SOC', 'BatTemp', 'InvTemp']
+    header = [_mode, 'PV', 'Grid', 'Battery', 'Usage', 'SOC', 'BatTemp', 'InvTemp']
     try:
         with tp.TableContext(headers=header, style="round") as table:
             lines = 0
@@ -62,7 +71,7 @@ def solaxtop():
                 else:
                     lines += 1
 
-                sv = get_values()
+                sv = get_modbus_values() if _mode == "modbus" else get_local_values()
 
                 if sv is None:
                     table(

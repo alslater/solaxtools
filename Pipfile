@@ -12,6 +12,7 @@ solaxtools = {file = ".", editable = true}
 python-daemon = "*"
 pid = "*"
 influxdb = "*"
+requests = "*"
 
 [dev-packages]
 

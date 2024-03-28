@@ -1,7 +1,7 @@
 import daemon
-import time
 from pid import PidFile
-from .modbus import get_values
+from .modbus import get_values as get_modbus_values
+from .local_api import get_values as get_local_values
 from influxdb import InfluxDBClient
 from configparser import ConfigParser
 from os import getenv, path
@@ -24,6 +24,10 @@ _influx = InfluxDBClient(
     database=config.get('influxdb', 'database', fallback="solax"),
 )
 
+_period = config.getint('influxdb', 'period', fallback=30)
+
+_mode = config.get('influxdb', 'mode', fallback="api")
+
 def write_series(values):
     if not config.getboolean('daemon', 'enabled', fallback=False):
         print(values)
@@ -39,6 +43,7 @@ def write_series(values):
         }
     ])
 
+
 def run():
     if config.getboolean('daemon', 'enabled', fallback=False):
         print('Starting daemon')
@@ -48,9 +53,11 @@ def run():
     else:
         solax_to_influxdb()
 
+
 def solax_to_influxdb():
     while True:
-        sv = get_values()
+
+        sv = get_modbus_values() if _mode == "modbus" else get_local_values()
 
         if sv is not None:
             pvpower = sv['pvpower']
@@ -67,4 +74,4 @@ def solax_to_influxdb():
 
             write_series(sv)
 
-        sleep(30)
+        sleep(_period)
