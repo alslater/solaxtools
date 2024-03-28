@@ -31,7 +31,7 @@ def get_values():
         return {
             'pvpower': float(data[8] + data[9]),
             'feedin': float(_decode_from_uint16(data[32])),
-            'soc': float(data[18]),
+            'soc': data[18],
             'battery_temp': data[17],
             'inverter_temp': data[39],
             'battery_power': float(_decode_from_uint16(data[16])),
