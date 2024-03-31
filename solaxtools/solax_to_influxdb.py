@@ -6,8 +6,7 @@ from influxdb import InfluxDBClient
 from configparser import ConfigParser
 from os import getenv, path
 from time import sleep
-from datetime import datetime
-
+from datetime import datetime, timezone
 
 config_file = path.join(getenv('HOME'), '.config/solaxtools.conf')
 
@@ -38,7 +37,7 @@ def write_series(values):
             "tags": {
                 "solax": "yes"
             },
-            "time": datetime.now().isoformat(),
+            "time": datetime.now(timezone.utc).isoformat(),
             "fields": values
         }
     ])
