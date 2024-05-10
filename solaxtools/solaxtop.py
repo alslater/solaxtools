@@ -60,7 +60,7 @@ def wait(timeout = 10):
 def solaxtop():
     tty_settings = set_input_nonblocking()
 
-    header = [_mode, 'PV', 'Grid', 'Battery', 'Usage', 'SOC', 'BatTemp', 'InvTemp']
+    header = [_mode, 'PV', 'Grid', 'Battery', 'Usage', 'SOC', 'BatTemp', 'InvTemp', 'GridV']
     try:
         with tp.TableContext(headers=header, style="round") as table:
             lines = 0
@@ -84,6 +84,7 @@ def solaxtop():
                             '*',
                             '*',
                             '*',
+                            '*'
                         ]
                     )
                 else:
@@ -106,7 +107,8 @@ def solaxtop():
                             f'{usage}W',
                             f'{sv["soc"]}%',
                             f'{sv["battery_temp"]}°C',
-                            f'{sv["inverter_temp"]}°C'
+                            f'{sv["inverter_temp"]}°C',
+                            f'{sv["grid_voltage"]}V'
                         ]
                     )
 

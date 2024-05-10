@@ -83,6 +83,7 @@ def get_values():
         'battery_temp': battery_temp,
         'inverter_temp': inverter_temp,
         'battery_power': battery_power,
+        'grid_voltage': "0"
     }
 
     return result

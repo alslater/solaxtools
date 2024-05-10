@@ -35,6 +35,7 @@ def get_values():
             'battery_temp': data[17],
             'inverter_temp': data[39],
             'battery_power': float(_decode_from_uint16(data[16])),
+            'grid_voltage': data[0] / 10
         }
     except Exception:
         return None
